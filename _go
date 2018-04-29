@@ -1,0 +1,67 @@
+_go() {
+    local pre cur
+
+    COMPREPLY=()
+    #pre="$3"
+    #cur="$2"
+    pre=${COMP_WORDS[COMP_CWORD-1]}
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    for_in_file(){
+        path_key=''
+        space='  '
+        for i in  `cat /home/arvin/PycharmProjects/go/.environmental`
+        do
+            path_key=${path_key}${space}${i%=*}
+        done
+        echo $path_key
+    }
+
+    complete_options() {
+        local opts i path_key space=' '
+        for i in  `cat /home/arvin/PycharmProjects/go/.environmental`
+        do
+            path_key=${path_key}${space}${i%=*}
+        done
+        opts="$path_key"" -a -d -l --add --list --delete"
+
+        for i in "${COMP_WORDS[@]}"
+        do
+            if [ "$i" == "-f" -o "$i" == "-r" ]
+            then
+                opts="$opts"" -R -S --filter -p"
+                break
+            fi
+        done
+
+        for i in "${COMP_WORDS[@]}"
+        do
+            if [ "$i" == "-t" -o "$i" == "-w" ]
+            then
+                opts="$opts"" -s --template --toc"
+                break
+            fi
+        done
+        echo "$opts"
+    }
+
+
+
+    case "$cur" in
+    -* )
+        COMPREPLY=( $( compgen -W "$(complete_options)" -- $cur) )
+        return 0
+        ;;
+    -d  )
+        COMPREPLY=( $( compgen -W "$(for_in_file)" -- $cur) )
+        ;;
+    esac
+
+    if [[ "${COMP_WORDS[1]}" == "-d" && ${COMP_CWORD} -eq 2 ]]; then
+        COMPREPLY=( $( compgen -W "$(for_in_file)" -- $cur) )
+    else
+        COMPREPLY=( $( compgen -W "$(for_in_file)"  -A file -- $cur ))
+    fi
+}
+
+complete -F _go go
