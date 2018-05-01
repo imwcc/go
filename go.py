@@ -10,6 +10,7 @@ from data import data
 # 0  程序执行成功，直接跳转到go 参数路径
 # 1  程序直接讲参数传递给 cd 命令
 # 2  程序执行成功，但是不传递任何参数给 cd 命令
+# 3  shell 将执行用户通过 go -l 选择的 path
 # -1 程序执行失败
 
 dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -29,6 +30,38 @@ def is_dir(path):
         return True
     else:
         return False
+
+def show_go_path(mdata):
+    pathList = mdata.list_path()
+    pathDir = {}
+    i = 0
+
+    for path in pathList:
+        pathDir[i]=path #该path 包含了符号 ‘=’
+        i += 1
+    print("%-5s %-5s %-5s" % ('item','key','value'))
+    for key, value in pathDir.items():
+        if len(value.split('=')) == 2 :
+            print(" %-4s %-6s %-6s" %(key,value.split('=')[0], value.split('=')[1]))
+        elif value.split() == '':
+            continue
+        else:
+            print("%s is a invalid value! " %(value))
+    print
+    while(True):
+        try:
+            name = raw_input("Please input the item of the number: ")
+        except EOFError:
+            print
+            exit(2)
+
+        if name.isdigit():
+            name = int(name)
+            if pathDir.has_key(name):
+                mdata.modify_go_cmd('go_l', pathDir[name].split('=')[1])
+                exit(3)
+            else:
+                print("The %s is not a vaild item of the number, please retry" %(name))
 
 def main():
     mdata = data()
@@ -81,7 +114,7 @@ def main():
                     break
 
         elif option in ("-l", "--list"):
-            mdata.list_path()
+            show_go_path(mdata)
             break
         elif option in ("-d", "--delete"):
             if value == "all":

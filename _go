@@ -7,7 +7,7 @@ _go() {
     pre=${COMP_WORDS[COMP_CWORD-1]}
     cur=${COMP_WORDS[COMP_CWORD]}
 
-    for_in_file(){
+    for_in_go(){
         path_key=''
         space='  '
         for i in  `cat /home/arvin/PycharmProjects/go/.environmental`
@@ -53,14 +53,14 @@ _go() {
         return 0
         ;;
     -d  )
-        COMPREPLY=( $( compgen -W "$(for_in_file)" -- $cur) )
+        COMPREPLY=( $( compgen -W "$(for_in_go)" -- $cur) )
         ;;
     esac
 
     if [[ "${COMP_WORDS[1]}" == "-d" && ${COMP_CWORD} -eq 2 ]]; then
-        COMPREPLY=( $( compgen -W "$(for_in_file)" -- $cur) )
+        COMPREPLY=( $( compgen -W "$(for_in_go)" -- $cur) )
     else
-        COMPREPLY=( $( compgen -W "$(for_in_file)"  -A file -- $cur ))
+        COMPREPLY=( $( compgen -W "$(for_in_go)"  -A file -- $cur ))
     fi
 }
 
