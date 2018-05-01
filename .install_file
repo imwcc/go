@@ -1,0 +1,22 @@
+
+source /home/arvin/PycharmProjects/go/_go
+go()
+{
+    /home/arvin/PycharmProjects/go/go.py $@
+    result=$?
+
+    if [ $result -eq 0 ]
+    then
+        source /home/arvin/PycharmProjects/go/.environmental && eval cd \$$1
+    elif [ $result -eq 1 ]
+    then
+        cd $1
+
+    elif [ $result -eq 3 ]
+    then
+        source /home/arvin/PycharmProjects/go/.environmental
+        echo ${go_l}
+        cd ${go_l}
+
+    fi
+}
