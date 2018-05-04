@@ -14,7 +14,7 @@ go()
 
     elif [ $result -eq 3 ]
     then
-        source /home/arvin/PycharmProjects/go/.environmental
+        source /home/arvin/PycharmProjects/go/.cmd
         echo ${go_l}
         cd ${go_l}
 
